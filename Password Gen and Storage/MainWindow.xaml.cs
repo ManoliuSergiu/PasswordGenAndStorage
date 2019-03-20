@@ -10,7 +10,7 @@ namespace Password_Gen_and_Storage
 		string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		string numbers = "0123456789";
 		string symbols = ",<.>/?;:'[{]}\\|~!@#$%^&*()_\"";
-
+		string storedpass;
 		string loginpath = @"../../LogIn.txt";
 		string passwordspath = @"../../Passwords.txt";
 		char[] split = {'☺'};
@@ -30,6 +30,7 @@ namespace Password_Gen_and_Storage
 		{
 			bool characters = false;
 			bool[] characterTypes = new bool[4];
+			storedpass =null;
 			if (lowercaseCheckbox.IsChecked == true) //IsChecked is a nullable bool
 			{
 				characterTypes[0] = true;
@@ -62,7 +63,10 @@ namespace Password_Gen_and_Storage
 					if (pwLength < 6)
 						outputTextBox.Text = "Password length needs to be >=6.";
 					else
+					{
 						outputTextBox.Text = GeneratePassword(characterTypes, pwLength);
+						storedpass = outputTextBox.Text;
+					}
 				}
 				else
 				{
@@ -99,33 +103,33 @@ namespace Password_Gen_and_Storage
 				{
 					pass[i] = lowercase[random.Next(lowercase.Length)];
 
-					if(characterTypes[1]) bias[1]*=2;
-					if(characterTypes[2]) bias[2]*=2;
-					if(characterTypes[3]) bias[3]*=2;
+					if(characterTypes[1]) bias[1]*=10;
+					if(characterTypes[2]) bias[2]*=10;
+					if(characterTypes[3]) bias[3]*=10;
 				}
 				else if (x <= ((float)(bias[0] + bias[1]) / biasSum) * 100)
 				{
 					pass[i] = uppercase[random.Next(uppercase.Length)];
 
-					if (characterTypes[0]) bias[0] *= 2;
-					if (characterTypes[2]) bias[2] *= 2;
-					if (characterTypes[3]) bias[3] *= 2;
+					if (characterTypes[0]) bias[0] *= 10;
+					if (characterTypes[2]) bias[2] *= 10;
+					if (characterTypes[3]) bias[3] *= 10;
 				}
 				else if (x <= ((float)(bias[0] + bias[1] + bias[2]) / biasSum) * 100)
 				{
 					pass[i] = numbers[random.Next(numbers.Length)];
 
-					if (characterTypes[0]) bias[0] *= 2;
-					if (characterTypes[1]) bias[1] *= 2;
-					if (characterTypes[3]) bias[3] *= 2;
+					if (characterTypes[0]) bias[0] *= 10;
+					if (characterTypes[1]) bias[1] *= 10;
+					if (characterTypes[3]) bias[3] *= 10;
 				}
 				else
 				{
 					pass[i] = symbols[random.Next(symbols.Length)];
 
-					if (characterTypes[0]) bias[0] *= 2;
-					if (characterTypes[1]) bias[1] *= 2;
-					if (characterTypes[2]) bias[2] *= 2;
+					if (characterTypes[0]) bias[0] *= 10;
+					if (characterTypes[1]) bias[1] *= 10;
+					if (characterTypes[2]) bias[2] *= 10;
 				}
 			}
 			return new string(pass);
@@ -133,11 +137,12 @@ namespace Password_Gen_and_Storage
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
-
+			LoginTransition();
 		}
 
 		private void Button_Click_2(object sender, RoutedEventArgs e)
 		{
+			storedpass = null;
 			LoginTransition();
 		}
 
@@ -245,6 +250,7 @@ namespace Password_Gen_and_Storage
 		{
 			pwviewGrid.Visibility = Visibility.Hidden;
 			pwaddGrid.Visibility = Visibility.Visible;
+			if (storedpass != null) itempwBox.Password = storedpass;
 
 		}
 
@@ -259,6 +265,7 @@ namespace Password_Gen_and_Storage
 			}
 			File.AppendAllText(passwordspath, aux + Environment.NewLine);
 			Login(Convert.ToString(addButton.Tag));
+			storedpass = null;
 		}
 
 		private void LogoutButton_Click(object sender, RoutedEventArgs e)

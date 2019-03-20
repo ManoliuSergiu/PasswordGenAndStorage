@@ -9,8 +9,8 @@ namespace Password_Gen_and_Storage
 {
 	class Crypt
 	{
-		static byte[] Key = Encoding.ASCII.GetBytes("RfUjXn2r4u7x!A%D");
-		static byte[] IV = Encoding.ASCII.GetBytes("y$B&E)H@McQfTjWn");
+		static readonly byte[] Key = Encoding.ASCII.GetBytes("RfUjXn2r4u7x!A%D");
+		static readonly byte[] IV = Encoding.ASCII.GetBytes("y$B&E)H@McQfTjWn");
 		public static byte[] EncryptString(string plainText)
 		{
 			

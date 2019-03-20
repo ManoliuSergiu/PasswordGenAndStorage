@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="251.289" Width="438.144">
     <Grid>
-        <Grid x:Name="genGrid" Visibility="Hidden">
+        <Grid x:Name="genGrid" Visibility="Visible">
             <Button Content="Generate" HorizontalAlignment="Left" VerticalAlignment="Top" Width="105" Margin="294,34,0,0" Click="Button_Click"/>
-            <TextBox x:Name="outputTextBox" HorizontalAlignment="Left" Height="20" Margin="44,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198"/>
+            <TextBox x:Name="outputTextBox" HorizontalAlignment="Left" Height="20" Margin="44,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" IsReadOnly="True"/>
             <CheckBox x:Name="uppercaseCheckbox" Content="Include Uppercase" HorizontalAlignment="Left" Margin="44,117,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="lengthTextBox" HorizontalAlignment="Left" Height="23" Margin="210,62,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="32" Text="12"/>
             <Label Content="Length" HorizontalAlignment="Left" Margin="44,59,0,0" VerticalAlignment="Top"/>
@@ -28,7 +28,7 @@
             <Button x:Name="createButton" Content="Create" HorizontalAlignment="Left" Margin="171,157,0,0" VerticalAlignment="Top" Width="75" Click="CreateButton_Click"/>
             <Label x:Name="errorLabel" Content="" HorizontalAlignment="Left" Margin="151,184,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid x:Name="pwviewGrid" Visibility="Visible">
+        <Grid x:Name="pwviewGrid" Visibility="Hidden">
             <Label x:Name="welcomeLabel" Content="Label" HorizontalAlignment="Left" Margin="39,10,0,0" VerticalAlignment="Top"/>
             <Button x:Name="addButton" Content="Add" HorizontalAlignment="Left" Margin="367,51,0,0" VerticalAlignment="Top" Width="53" Click="AddButton_Click"/>
             <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="169" Margin="10,41,0,0" VerticalAlignment="Top" Width="343">
