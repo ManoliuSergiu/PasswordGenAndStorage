@@ -10,6 +10,7 @@ namespace Password_Gen_and_Storage
 		string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		string numbers = "0123456789";
 		string symbols = ",<.>/?;:'[{]}\\|~!@#$%^&*()_\"";
+
 		string loginpath = @"../../LogIn.txt";
 		string passwordspath = @"../../Passwords.txt";
 		char[] split = {'☺'};
@@ -27,43 +28,107 @@ namespace Password_Gen_and_Storage
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			string characters = null;
-
+			bool characters = false;
+			bool[] characterTypes = new bool[4];
 			if (lowercaseCheckbox.IsChecked == true) //IsChecked is a nullable bool
-				characters += lowercase;
-
-			if (uppercaseCheckbox.IsChecked == true)
-				characters += uppercase;
-
-			if (numbersCheckbox.IsChecked == true)
-				characters += numbers;
-
-			if (symbolsCheckbox.IsChecked == true)
-				characters += symbols;
-			
-			if (characters == null)
 			{
-				outputTextBox.Text = "You must select a character set";
+				characterTypes[0] = true;
+				characters = true;
+			}
+			if (uppercaseCheckbox.IsChecked == true)
+			{
+				characterTypes[1] = true;
+				characters = true;
+			}
+			if (numbersCheckbox.IsChecked == true)
+			{
+				characterTypes[2] = true;
+				characters = true;
+			}
+			if (symbolsCheckbox.IsChecked == true)
+			{
+				characterTypes[3] = true;
+				characters = true;
+			}
+
+			if (characters == false)
+			{
+				outputTextBox.Text = "You must select a character set.";
 			}
 			else
 			{
-
-				if (int.TryParse(lengthTextBox.Text, out int passwordLength))
+				if (int.TryParse(lengthTextBox.Text, out int pwLength))
 				{
-					string password = null;
-
-					for (int i = 0; i < passwordLength; i++)
-					{
-						password += characters[random.Next(characters.Length)];
-					}
-
-					outputTextBox.Text = password;
+					if (pwLength < 6)
+						outputTextBox.Text = "Password length needs to be >=6.";
+					else
+						outputTextBox.Text = GeneratePassword(characterTypes, pwLength);
 				}
 				else
 				{
-					outputTextBox.Text = "You must insert a number";
+					outputTextBox.Text = "You must insert a number.";
 				}
 			}
+		}
+
+		private string GeneratePassword(bool[] characterTypes, int pwLength)
+		{
+			int k=0;
+			int[] bias =new int[characterTypes.Length];
+			int biasSum=0;
+			char[] pass = new char[pwLength];
+			for (int i = 0; i < characterTypes.Length; i++)
+			{
+				if (characterTypes[i])
+				{
+					k++;
+					bias[i] = (characterTypes[i] ? 1 : 0);
+				}
+			}
+
+			for (int i = 0; i < pwLength; i++)
+			{
+				biasSum = 0;
+				for (int j = 0; j < characterTypes.Length; j++)
+				{
+					biasSum += bias[j];
+				}
+
+				int x = random.Next(101);
+				if (x <= ((float)bias[0]/biasSum)*100)
+				{
+					pass[i] = lowercase[random.Next(lowercase.Length)];
+
+					if(characterTypes[1]) bias[1]*=2;
+					if(characterTypes[2]) bias[2]*=2;
+					if(characterTypes[3]) bias[3]*=2;
+				}
+				else if (x <= ((float)(bias[0] + bias[1]) / biasSum) * 100)
+				{
+					pass[i] = uppercase[random.Next(uppercase.Length)];
+
+					if (characterTypes[0]) bias[0] *= 2;
+					if (characterTypes[2]) bias[2] *= 2;
+					if (characterTypes[3]) bias[3] *= 2;
+				}
+				else if (x <= ((float)(bias[0] + bias[1] + bias[2]) / biasSum) * 100)
+				{
+					pass[i] = numbers[random.Next(numbers.Length)];
+
+					if (characterTypes[0]) bias[0] *= 2;
+					if (characterTypes[1]) bias[1] *= 2;
+					if (characterTypes[3]) bias[3] *= 2;
+				}
+				else
+				{
+					pass[i] = symbols[random.Next(symbols.Length)];
+
+					if (characterTypes[0]) bias[0] *= 2;
+					if (characterTypes[1]) bias[1] *= 2;
+					if (characterTypes[2]) bias[2] *= 2;
+				}
+			}
+			return new string(pass);
 		}
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)
